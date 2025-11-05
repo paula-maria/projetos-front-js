@@ -3,60 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora JS</title>
+  <title>Calculadora JS com Tema</title>
   <style>
+    :root {
+      --fundo-escuro: #1e1e1e;
+      --fundo-claro: #f2f2f2;
+      --texto-escuro: #fff;
+      --texto-claro: #000;
+      --botao-escuro: #333;
+      --botao-claro: #ddd;
+      --operador: #ff9500;
+      --igual: #817e77;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      font-family: 'Roboto Mono', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      background: var(--fundo-escuro);
+      color: var(--texto-escuro);
     }
+
     .calculadora {
       background: #222;
-      color: white;
       padding: 20px;
-      border-radius: 10px;
-      width: 260px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      width: 280px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s;
     }
+
+    body.claro {
+      background: var(--fundo-claro);
+      color: var(--texto-claro);
+    }
+    body.claro .calculadora {
+      background: #ffffffce;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
     #display {
       width: 100%;
-      height: 50px;
-      font-size: 24px;
-      margin-bottom: 10px;
+      height: 60px;
+      font-size: 28px;
+      margin-bottom: 15px;
       text-align: right;
       padding: 10px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       background: #333;
-      color: white;
+      color: rgb(248, 156, 18);
     }
+
+    body.claro #display {
+      background: #eee;
+      color: #000;
+    }
+
     .botoes {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
+
     button {
       padding: 15px;
       font-size: 18px;
       border: none;
-      border-radius: 5px;
-      background: #555;
-      color: white;
+      border-radius: 10px;
+      background: var(--botao-escuro);
+      color: var(--texto-escuro);
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.1s;
     }
+
+    body.claro button {
+      background: var(--botao-claro);
+      color: var(--texto-claro);
+    }
+
     button:hover {
-      background: #777;
+      transform: scale(1.05);
     }
-    .igual {
-      background: #ff9500;
+
+    .operador {
+      background: var(--operador);
       color: white;
     }
-    .igual:hover {
-      background: #ffb347;
+
+    .igual {
+      background: var(--igual);
+      color: white;
+    }
+
+    #tema {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #555;
+      border-radius: 10px;
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #tema:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    body.claro #tema {
+      border-color: #aaa;
+    }
+    body.claro #tema:hover {
+      background: rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
@@ -66,18 +129,18 @@
     <div class="botoes">
       <button onclick="limpar()">C</button>
       <button onclick="apagar()">←</button>
-      <button onclick="adicionar('/')">÷</button>
-      <button onclick="adicionar('*')">×</button>
+      <button class="operador" onclick="adicionar('/')">÷</button>
+      <button class="operador" onclick="adicionar('*')">×</button>
 
       <button onclick="adicionar('7')">7</button>
       <button onclick="adicionar('8')">8</button>
       <button onclick="adicionar('9')">9</button>
-      <button onclick="adicionar('-')">−</button>
+      <button class="operador" onclick="adicionar('-')">−</button>
 
       <button onclick="adicionar('4')">4</button>
       <button onclick="adicionar('5')">5</button>
       <button onclick="adicionar('6')">6</button>
-      <button onclick="adicionar('+')">+</button>
+      <button class="operador" onclick="adicionar('+')">+</button>
 
       <button onclick="adicionar('1')">1</button>
       <button onclick="adicionar('2')">2</button>
@@ -87,10 +150,14 @@
       <button onclick="adicionar('0')">0</button>
       <button onclick="adicionar('.')">.</button>
     </div>
+
+    <button id="tema" onclick="alternarTema()">🌙 Mudar Tema</button>
   </div>
 
   <script>
     const display = document.getElementById('display');
+    const body = document.body;
+    const botaoTema = document.getElementById('tema');
 
     function adicionar(valor) {
       display.value += valor;
@@ -107,9 +174,16 @@
     function calcular() {
       try {
         display.value = eval(display.value);
-      } catch (e) {
+      } catch {
         display.value = 'Erro';
       }
+    }
+
+    function alternarTema() {
+      body.classList.toggle('claro');
+      botaoTema.textContent = body.classList.contains('claro')
+        ? '🌑 Modo Escuro'
+        : '🌙 Modo Claro';
     }
   </script>
 </body>
